@@ -1,0 +1,10 @@
+[user]
+  name = Ahnaf Al Nafis
+  email = ahnafalnafis@gmail.com
+
+[core]
+  editor = vim
+  autocrlf = input
+
+[credential]
+	helper = store
