@@ -7,12 +7,18 @@ plug#begin('~/.cache/vim/plugged')
 
 Plug 'gruvbox-community/gruvbox'
 Plug 'lifepillar/vim-solarized8'
+Plug 'joshdick/onedark.vim'
+
+Plug 'sheerun/vim-polyglot'
+Plug 'machakann/vim-highlightedyank'
+g:highlightedyank_highlight_duration = 300
 
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 Plug 'tpope/vim-commentary'
 Plug 'cohama/lexima.vim'
+Plug 'markonm/traces.vim'
 
 Plug 'mbbill/undotree'
 Plug 'junegunn/fzf.vim'
@@ -166,6 +172,7 @@ endif
 highlight! link SpellCap   SpellBad
 highlight! link SpellRare  SpellBad
 highlight! link SpellLocal SpellBad
+highlight! link HighlightedyankRegion Search
 
 # Rows and columns:
 set colorcolumn=+1
@@ -181,6 +188,13 @@ augroup better_sign_column
   }
 augroup END
 
+# Git:
+g:gitgutter_sign_added = '▌'
+g:gitgutter_sign_removed = '▌'
+g:gitgutter_sign_modified = '▌'
+# g:gitgutter_sign_removed_first_line = ''
+g:gitgutter_sign_modified_removed = '▌'
+
 # Spell checking:
 set spell
 set spelllang=en_us
@@ -193,6 +207,20 @@ augroup StatusLine
   autocmd BufEnter * {
     var sep = ' '
     set statusline=
+
+    # Git status:
+    if util.Loaded('fugitive') && g:FugitiveIsGitDir()
+      def! g:GitGutterStatus(): string
+        var [added, modified, removed] = g:GitGutterGetHunkSummary()
+        return printf("+%d ~%d -%d", added, modified, removed)
+      enddef
+
+      &l:statusline ..= sep
+      &l:statusline ..= '%{g:FugitiveHead()}'
+      &l:statusline ..= sep
+      &l:statusline ..= '(%{g:GitGutterStatus()})'
+      &l:statusline ..= sep
+    endif
 
     # Buffer number:
     # &l:statusline   = '%#PmenuSel#'
@@ -294,6 +322,7 @@ augroup setup_indentation
   filetype plugin indent on
   set tabstop=2
   set shiftwidth=2
+  set shiftround
   set softtabstop=-1
   set expandtab
   set autoindent
