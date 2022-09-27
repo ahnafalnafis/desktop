@@ -16,13 +16,13 @@ export EDITOR=vim
 export HOUR=$(date +%H)
 export BACKGROUND=''
 
-if [[ $HOUR -ge 18 ]]; then
+if [ $HOUR -ge 18 ]; then
   BACKGROUND=dark
 
-elif [[ $HOUR -ge 7 ]]; then
+elif [ $HOUR -ge 7 ]; then
   BACKGROUND=light
 
-elif [[ $HOUR -ge 0 ]]; then
+elif [ $HOUR -ge 0 ]; then
   BACKGROUND=dark
 fi
 
@@ -57,12 +57,16 @@ bwht='\[\033[01;37m\]'   # White
 PS1="$grn\u$clr@\h$clr:$blu\W$clr\$ "
 
 # Aliases:
-alias ls='ls -A --color=auto'
+alias ls='ls -A --color=auto -F'
 alias ll='tree -alC -I .git -I node_modules -I __pychache__'
-alias la='ls -1'
+alias la='ls -1 -hs'
 alias sb='source ~/.bashrc'
 alias mkdir='mkdir -pv'
+alias rm='rm -fv'
 
 alias ..='cd ..;pwd'          # Move to the parent folder.
 alias ...='cd ../..;pwd'      # Move up two parent folders.
 alias ....='cd ../../..;pwd'  # Move up three parent folders.
+
+# Git:
+alias gs='git status -s'

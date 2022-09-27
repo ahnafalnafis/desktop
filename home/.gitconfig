@@ -6,5 +6,8 @@
   editor = vim
   autocrlf = input
 
+[diff]
+    tool = vimdiff
+
 [credential]
 	helper = store
