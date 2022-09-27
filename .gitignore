@@ -1,2 +1,3 @@
-/.vim/pack
-/.vim/plugged
+/home/.vim/autoload/plug.vim
+/home/.vim/pack
+/home/.vim/plugged
