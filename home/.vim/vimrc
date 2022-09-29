@@ -98,9 +98,7 @@ set hlsearch
 
 set scrolloff=7
 set display+=lastline
-&fillchars =
-        'vert:┃,'
-    .. 'fold:˗'
+&fillchars = 'vert:┃,fold:˗'
 # set list
 # &listchars = 'eol:$,lead:·'
 
@@ -190,7 +188,7 @@ augroup better_sign_column
         else
             set signcolumn=yes
         endif
-  }
+    }
 augroup END
 
 # Spell checking:
@@ -342,7 +340,7 @@ augroup setup_indentation
         setlocal tabstop=4
         setlocal shiftwidth=4
         setlocal softtabstop=-1
-  }
+    }
 augroup END
 
 augroup trim_white_spaces
@@ -351,7 +349,7 @@ augroup trim_white_spaces
         var save = winsaveview()
         keeppatterns :%s/\s\+$//e
         winrestview(save)
-  }
+    }
 augroup END
 
 # Tabs and indenting: }}
@@ -406,7 +404,7 @@ augroup remember_last_position
         if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
             exe "normal! g`\""
         endif
-  }
+    }
 augroup END
 
 # Marking: }}
