@@ -2,19 +2,28 @@ vim9script noclear
 
 import autoload './autoload/util.vim'
 
+# The Legend Key:
+g:mapleader = "\<A-F>"
+
 # Plugins: {{
 plug#begin('~/.cache/vim/plugged')
 
 Plug 'gruvbox-community/gruvbox'
 Plug 'lifepillar/vim-solarized8'
-Plug 'joshdick/onedark.vim'
 
 Plug 'sheerun/vim-polyglot'
+Plug 'ap/vim-css-color'
 Plug 'machakann/vim-highlightedyank'
-g:highlightedyank_highlight_duration = 300
+    g:highlightedyank_highlight_duration = 100
 
 Plug 'tpope/vim-fugitive'
+    command! Gs Git status -s
+
 Plug 'airblade/vim-gitgutter'
+    g:gitgutter_sign_added = '▌'
+    g:gitgutter_sign_removed = '▌'
+    g:gitgutter_sign_modified = '▌'
+    g:gitgutter_sign_modified_removed = '▌'
 
 Plug 'tpope/vim-commentary'
 Plug 'cohama/lexima.vim'
@@ -30,49 +39,49 @@ plug#end()
 # Fixing terminal: {{
 
 if !has('gui_running')
-  # Undercurls:
-  &t_Cs = "\e[4:3m"
-  &t_Ce = "\e[4:0m"
+    # Undercurls:
+    &t_Cs = "\e[4:3m"
+    &t_Ce = "\e[4:0m"
 
-  # Cursor shapes:
-  &t_SI = "\e[5 q"    # blink bar. Unblinking: "\e[6 q"
-  &t_EI = "\e[1 q"    # blink block. Unblinking: "e\[0 q"
-  &t_SR = "\e[3 q"    # blink underline. Unblinking: "\e[3 q"
+    # Cursor shapes:
+    &t_SI = "\e[5 q"    # blink bar. Unblinking: "\e[6 q"
+    &t_EI = "\e[1 q"    # blink block. Unblinking: "e\[0 q"
+    &t_SR = "\e[3 q"    # blink underline. Unblinking: "\e[3 q"
 
-  # Enable modified arrow keys, see  :help arrow_modifiers
-  execute "silent! set <xUp>=\e[@;*A"
-  execute "silent! set <xDown>=\e[@;*B"
-  execute "silent! set <xRight>=\e[@;*C"
-  execute "silent! set <xLeft>=\e[@;*D"
+    # Enable modified arrow keys, see  :help arrow_modifiers
+    execute "silent! set <xUp>=\e[@;*A"
+    execute "silent! set <xDown>=\e[@;*B"
+    execute "silent! set <xRight>=\e[@;*C"
+    execute "silent! set <xLeft>=\e[@;*D"
 
-  # Fix Alt Key:
-  execute "silent! set <A-A>=\ea"
-  execute "silent! set <A-B>=\eb"
-  execute "silent! set <A-C>=\ec"
-  execute "silent! set <A-D>=\ed"
-  execute "silent! set <A-E>=\ee"
-  execute "silent! set <A-F>=\ef"
-  execute "silent! set <A-G>=\eg"
-  execute "silent! set <A-H>=\eh"
-  execute "silent! set <A-I>=\ei"
-  execute "silent! set <A-J>=\ej"
-  execute "silent! set <A-K>=\ek"
-  execute "silent! set <A-L>=\el"
-  execute "silent! set <A-M>=\em"
-  execute "silent! set <A-N>=\en"
-  execute "silent! set <A-O>=\eo"
-  execute "silent! set <A-P>=\ep"
-  execute "silent! set <A-Q>=\eq"
-  execute "silent! set <A-R>=\er"
-  execute "silent! set <A-S>=\es"
-  execute "silent! set <A-T>=\et"
-  execute "silent! set <A-U>=\eu"
-  execute "silent! set <A-V>=\ev"
-  execute "silent! set <A-W>=\ew"
-  execute "silent! set <A-X>=\ex"
-  execute "silent! set <A-Y>=\ey"
-  execute "silent! set <A-Z>=\ez"
-  execute "silent! set <A-;>=\e;"
+    # Fix Alt Key:
+    execute "silent! set <A-A>=\ea"
+    execute "silent! set <A-B>=\eb"
+    execute "silent! set <A-C>=\ec"
+    execute "silent! set <A-D>=\ed"
+    execute "silent! set <A-E>=\ee"
+    execute "silent! set <A-F>=\ef"
+    execute "silent! set <A-G>=\eg"
+    execute "silent! set <A-H>=\eh"
+    execute "silent! set <A-I>=\ei"
+    execute "silent! set <A-J>=\ej"
+    execute "silent! set <A-K>=\ek"
+    execute "silent! set <A-L>=\el"
+    execute "silent! set <A-M>=\em"
+    execute "silent! set <A-N>=\en"
+    execute "silent! set <A-O>=\eo"
+    execute "silent! set <A-P>=\ep"
+    execute "silent! set <A-Q>=\eq"
+    execute "silent! set <A-R>=\er"
+    execute "silent! set <A-S>=\es"
+    execute "silent! set <A-T>=\et"
+    execute "silent! set <A-U>=\eu"
+    execute "silent! set <A-V>=\ev"
+    execute "silent! set <A-W>=\ew"
+    execute "silent! set <A-X>=\ex"
+    execute "silent! set <A-Y>=\ey"
+    execute "silent! set <A-Z>=\ez"
+    execute "silent! set <A-;>=\e;"
 endif
 
 # Fixing terminal: }}
@@ -80,9 +89,7 @@ endif
 
 set ignorecase
 set smartcase
-if has('reltime') # Do incremental searching
-  set incsearch   # when it's possible to timeout.
-endif
+set incsearch
 set hlsearch
 # :nohlsearch
 
@@ -92,23 +99,25 @@ set hlsearch
 set scrolloff=7
 set display+=lastline
 &fillchars =
-     'vert:┃,'
-  .. 'fold:·'
+        'vert:┃,'
+    .. 'fold:˗'
+# set list
+# &listchars = 'eol:$,lead:·'
 
 # Redrawing:
 set lazyredraw
 nnoremap <silent> <C-L> :call <SID>Refresh()<CR>
 def Refresh(): void
-  :nohlsearch
-  redraw!
-  util.Notify('Refreshed!')
+    :nohlsearch
+    redraw!
+    util.Notify('Refreshed!')
 enddef
 
 # Line numbers:
 set number
 set relativenumber
 augroup better_line_number
-  autocmd!
+    autocmd!
     autocmd InsertEnter * set norelativenumber
     autocmd InsertLeave * set relativenumber
 augroup END
@@ -117,57 +126,53 @@ augroup END
 # Syntax highlighting and color scheme: {{
 
 if has('syntax_on')
-  syntax enable
+    syntax enable
 else
-  syntax on
+    syntax on
 endif
 
 # Background color:
 &background = (exists('$BACKGROUND') ? $BACKGROUND : 'dark')
 
 if !has('gui_running')
-  # 24-Bit color support
-  set termguicolors
-  set t_Co=256
+    # 24-Bit color support
+    set termguicolors
+    set t_Co=256
 
-  # Xterm true colors:
-  &t_8f = "\e[38;2;%lu;%lu;%lum"
-  &t_8b = "\e[48;2;%lu;%lu;%lum"
+    # Xterm true colors:
+    &t_8f = "\e[38;2;%lu;%lu;%lum"
+    &t_8b = "\e[48;2;%lu;%lu;%lum"
 endif
 
 # Color scheme:
 {
-  # Theme:
-  var theme: string
-  if &background == 'dark'
-    theme = 'solarized8'
-  else
-    theme = 'gruvbox'
-  endif
+    # Theme:
+    var theme: string
+    if &background == 'dark'
+        theme = 'solarized8'
+    else
+        theme = 'gruvbox'
+    endif
 
-  # Options:
-  if theme == 'gruvbox'
-    g:gruvbox_bold = false
-    g:gruvbox_contrast_dark = 'hard'
-    g:gruvbox_contrast_light = 'hard'
+    # Options:
+    if theme == 'gruvbox'
+        g:gruvbox_bold = false
+        g:gruvbox_contrast_dark = 'hard'
+        g:gruvbox_contrast_light = 'hard'
 
-  elseif theme == 'solarized8_flat'
-    || theme == 'solarized8'
-    g:solarized_italics = false
-    g:solarized_statusline = 'flat'
-  endif
+    elseif theme == 'solarized8_flat'
+        || theme == 'solarized8'
+        g:solarized_italics = false
+        g:solarized_statusline = 'flat'
+    endif
 
-  # Execution:
-  execute 'colorscheme ' .. theme
+    # Execution:
+    execute 'colorscheme ' .. theme
 }
 
 # Color scheme overrides:
 highlight clear SpellBad
-if (&termguicolors && &t_Co == '256')
-  highlight SpellBad cterm=undercurl gui=undercurl
-else
-  highlight SpellBad cterm=underline term=underline
-endif
+highlight SpellBad cterm=undercurl gui=undercurl
 
 highlight! link SpellCap   SpellBad
 highlight! link SpellRare  SpellBad
@@ -178,22 +183,15 @@ highlight! link HighlightedyankRegion Search
 set colorcolumn=+1
 set cursorline
 augroup better_sign_column
-  autocmd!
-  autocmd BufWinEnter * {
-    if win_gettype() == 'popup'
-      &l:signcolumn = 'no'
-    else
-      set signcolumn=yes
-    endif
+    autocmd!
+    autocmd BufWinEnter * {
+        if win_gettype() == 'popup'
+            &l:signcolumn = 'no'
+        else
+            set signcolumn=yes
+        endif
   }
 augroup END
-
-# Git:
-g:gitgutter_sign_added = '▌'
-g:gitgutter_sign_removed = '▌'
-g:gitgutter_sign_modified = '▌'
-# g:gitgutter_sign_removed_first_line = ''
-g:gitgutter_sign_modified_removed = '▌'
 
 # Spell checking:
 set spell
@@ -203,53 +201,54 @@ set spelllang=en_us
 # Multiple windows: {{
 
 augroup StatusLine
-  set laststatus=2
-  autocmd BufEnter * {
-    var sep = ' '
-    set statusline=
+    autocmd!
+    set laststatus=2
+    autocmd BufEnter,BufWritePre * {
+        var sep = ' '
+        set statusline=
 
-    # Git status:
-    if util.Loaded('fugitive') && g:FugitiveIsGitDir()
-      def! g:GitGutterStatus(): string
-        var [added, modified, removed] = g:GitGutterGetHunkSummary()
-        return printf("+%d ~%d -%d", added, modified, removed)
-      enddef
+        # Git status:
+        if util.Loaded('fugitive') && g:FugitiveIsGitDir()
+            def! g:GitGutterStatus(): string
+                var [added, modified, removed] = g:GitGutterGetHunkSummary()
+                return printf("+%d ~%d -%d", added, modified, removed)
+            enddef
 
-      &l:statusline ..= sep
-      &l:statusline ..= '%{g:FugitiveHead()}'
-      &l:statusline ..= sep
-      &l:statusline ..= '(%{g:GitGutterStatus()})'
-      &l:statusline ..= sep
-    endif
+            &l:statusline ..= sep
+            &l:statusline ..= '%{g:FugitiveHead()}'
+            &l:statusline ..= sep
+            &l:statusline ..= '(%{g:GitGutterStatus()})'
+            &l:statusline ..= sep
+        endif
 
-    # Buffer number:
-    # &l:statusline   = '%#PmenuSel#'
-    &l:statusline ..= sep
-    &l:statusline ..= '%n:'
-    # &l:statusline ..= sep
-    # &l:statusline ..= '%#StatusLine#'
+        # Buffer number:
+        # &l:statusline   = '%#PmenuSel#'
+        &l:statusline ..= sep
+        &l:statusline ..= '%n:'
+        # &l:statusline ..= sep
+        # &l:statusline ..= '%#StatusLine#'
 
-    # File name:
-    # &l:statusline ..= sep
-    &l:statusline ..= '%t'
-    &l:statusline ..= sep
+        # File name:
+        # &l:statusline ..= sep
+        &l:statusline ..= '%t'
+        &l:statusline ..= sep
 
-    # Separator:
-    &l:statusline ..= '%='
+        # Separator:
+        &l:statusline ..= '%='
 
-    # File type:
-    &l:statusline ..= util.RealName(&l:filetype)
-    &l:statusline ..= sep
+        # File type:
+        &l:statusline ..= util.RealFileType(&filetype)
+        &l:statusline ..= sep
 
-    # Line, column, total line numbers:
-    # &l:statusline ..= '%#PmenuSel#'
-    # &l:statusline ..= sep
-    &l:statusline ..= '%14.(%l:%v%) (%L)'
-    &l:statusline ..= sep
-    # &l:statusline ..= '%#StatusLine#'
+        # Line, column, total line numbers:
+        # &l:statusline ..= '%#PmenuSel#'
+        # &l:statusline ..= sep
+        &l:statusline ..= '%14.(%l:%v%) (%L)'
+        &l:statusline ..= sep
+        # &l:statusline ..= '%#StatusLine#'
     }
 
-  autocmd BufEnter netrw setlocal statusline=%#NONE#
+    autocmd BufEnter netrw setlocal statusline=%#NONE#
 augroup END
 
 # Splits and buffers:
@@ -260,13 +259,24 @@ set hidden
 nnoremap <Tab>    :bnext<CR>
 nnoremap <S-Tab>  :bprevious<CR>
 nnoremap <A-Q>    :bdelete<CR>
+
+# File explorer (netrw):
+g:netrw_banner = 0
+g:netrw_home = '~/.cache/vim'
+g:netrw_winsize = 30
+g:netrw_liststyle = 3
+g:netrw_browse_split = 3
+
+nnoremap <nowait> <Leader>p :Lexplore<CR>
+nnoremap <C-P> :FZF --reverse --prompt \ <CR>
+nnoremap gb    :Buffers <CR>
 # nnoremap <A-L>    :ls<CR>
 
 # Multiple windows: }}
 # Mouse: {{
 
 set ttymouse=sgr
-set mouse=
+set mouse=a
 
 nnoremap <silent> <A-M> :call <SID>ToggleMouse()<CR>
 inoremap <silent> <A-M> :call <SID>ToggleMouse()<CR>
@@ -274,15 +284,15 @@ vnoremap <silent> <A-M> :call <SID>ToggleMouse()<CR>
 cnoremap <silent> <A-M> :call <SID>ToggleMouse()<CR>
 
 def ToggleMouse(): void
-  if &mouse == ''
-    set mouse=a
-    set scrolloff=0
-    util.Notify('Mouse: On')
-  else
-    set mouse=
-    set scrolloff=10
-    util.Notify('Mouse: Off')
-  endif
+    if &mouse == ''
+        set mouse=a
+        set scrolloff=0
+        util.Notify('Mouse: On')
+    else
+        set mouse=
+        set scrolloff=10
+        util.Notify('Mouse: Off')
+    endif
 enddef
 
 # Mouse: }}
@@ -296,7 +306,8 @@ set belloff=all
 
 # Selecting:
 set clipboard=unnamedplus
-nnoremap <C-A> ggVG
+nnoremap <A-A> ggVG
+nnoremap <A-V> V
 nnoremap Y y$
 
 # Backup:
@@ -307,8 +318,8 @@ set pumheight=15
 
 # Adding and subtracting:
 set nrformats=alpha,hex,bin,unsigned
-nnoremap + <C-A>
-nnoremap - <C-X>
+# nnoremap + <C-A>
+# nnoremap - <C-X>
 
 # Commenting:
 nmap <A-C> <Plug>CommentaryLine
@@ -318,29 +329,35 @@ vmap <A-C> <Plug>Commentary
 # Tabs and indenting: {{
 
 augroup setup_indentation
-  autocmd!
-  filetype plugin indent on
-  set tabstop=2
-  set shiftwidth=2
-  set shiftround
-  set softtabstop=-1
-  set expandtab
-  set autoindent
-  set copyindent
+    autocmd!
+    filetype plugin indent on
+    ## 2 Space:
+    # set tabstop=2
+    # set shiftwidth=2
+    # set shiftround
+    # set softtabstop=-1
 
-  autocmd FileType python {
-    setlocal tabstop=4
-    setlocal shiftwidth=4
-    setlocal softtabstop=-1
+    ## 4 Space:
+    set softtabstop=4
+    set shiftwidth=4
+    set shiftround
+    set expandtab
+    set autoindent
+    set copyindent
+
+    autocmd FileType python {
+        setlocal tabstop=4
+        setlocal shiftwidth=4
+        setlocal softtabstop=-1
   }
 augroup END
 
 augroup trim_white_spaces
-  autocmd!
-  autocmd BufWritePre * {
-    var save = winsaveview()
-    keeppatterns :%s/\s\+$//e
-    winrestview(save)
+    autocmd!
+    autocmd BufWritePre * {
+        var save = winsaveview()
+        keeppatterns :%s/\s\+$//e
+        winrestview(save)
   }
 augroup END
 
@@ -382,28 +399,24 @@ set wildoptions=pum,tagfile
 # Multi-byte characters: {{
 
 if &encoding != 'utf-8' && &fileencoding != 'utf-8'
-  set encoding=utf-8
-  scriptencoding utf-8
-  set fileencoding=utf-8
+    set encoding=utf-8
+    scriptencoding utf-8
+    set fileencoding=utf-8
 endif
 
 # Multi-byte characters: }}
 # Marking: {{
 
 augroup remember_last_position
-  autocmd!
-  autocmd BufReadPost * {
-    if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-      exe "normal! g`\""
-    endif
+    autocmd!
+    autocmd BufReadPost * {
+        if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+            exe "normal! g`\""
+        endif
   }
 augroup END
 
 # Marking: }}
-
-# The Legend Key:
-g:mapleader = "\<A-F>"
-
 # Self-discipline: {{
 
 nnoremap <Up>     :echoerr "Use k"<CR>
@@ -426,44 +439,65 @@ lexima#insmode#map_hook('before', '<CR>', '')
 # Lexima: }}
 # Completion: {{
 
-def SmartTab(): string
-  if (exists('g:did_coc_loaded') && g:did_coc_loaded && coc#pum#visible())
-    return coc#pum#next(1)
-  elseif pumvisible()
-    return "\<C-N>"
-  else
-    return "\<Tab>"
-  endif
-enddef
+# Coc extensions:
+g:coc_global_extensions = [
+    'coc-snippets',
+    'coc-prettier',
 
-def SmartShiftTab(): string
-  if (exists('g:did_coc_loaded') && g:did_coc_loaded && coc#pum#visible())
-    return coc#pum#prev(1)
-  elseif pumvisible()
-    return "\<C-P>"
-  else
-    return "\<C-H>"
-  endif
-enddef
+    'coc-clangd',
+    'coc-tsserver',
+    'coc-python',
 
-def SmartEnter(): string
-  if (exists('g:did_coc_loaded') && g:did_coc_loaded)
-    if coc#pum#visible()
-      return coc#pum#confirm()
-    else
-      return "\<C-G>u\<CR>\<C-R>=coc#on_enter()\<CR>"
-    endif
+    'coc-html-css-support',
+    'coc-emmet',
+    'coc-html',
+    'coc-css',
 
-  elseif pumvisible()
-    return "\<C-Y>"
-  else
-    return "\<C-G>u\<CR>"
-  endif
-enddef
+    'coc-json',
+    'coc-yaml',
+
+    'coc-sh',
+    'coc-lua',
+]
 
 inoremap <expr> <Tab>   <SID>SmartTab()
 inoremap <expr> <S-Tab> <SID>SmartShiftTab()
 inoremap <expr> <CR>    <SID>SmartEnter()
+
+def SmartTab(): string
+    if (exists('g:did_coc_loaded') && g:did_coc_loaded && coc#pum#visible())
+        return coc#pum#next(1)
+    elseif pumvisible()
+        return "\<C-N>"
+    else
+        return "\<Tab>"
+    endif
+enddef
+
+def SmartShiftTab(): string
+    if (exists('g:did_coc_loaded') && g:did_coc_loaded && coc#pum#visible())
+        return coc#pum#prev(1)
+    elseif pumvisible()
+        return "\<C-P>"
+    else
+        return "\<C-H>"
+    endif
+enddef
+
+def SmartEnter(): string
+    if (exists('g:did_coc_loaded') && g:did_coc_loaded)
+        if coc#pum#visible()
+            return coc#pum#confirm()
+        else
+            return "\<C-G>u\<CR>\<C-R>=coc#on_enter()\<CR>"
+        endif
+
+    elseif pumvisible()
+        return "\<C-Y>"
+    else
+        return "\<C-G>u\<CR>"
+    endif
+enddef
 
 # Completion: }}
 # Key swaps: {{
@@ -483,16 +517,37 @@ nnoremap gj j
 # nnoremap <A-V> V
 
 # Key swaps: }}
-# File browsing: {{
-
-  # File explorer (netrw):
-  g:netrw_home = '~/.cache/vim'
-  g:netrw_winsize = 30
-
-# File browsing: }}
 # Macros: {{
 
 nnoremap Q @q
 
 # Macros: }}
+# Shell aliases: {{
 
+command! Clear :!clear
+command! -nargs=+ Date :!date "<args>"
+command! -complete=file -nargs=*  Ls     :!ls -A --color=auto -F <args>
+command! -complete=file -nargs=+  Mkdir  :!mkdir -pv <args>
+command! -complete=file -nargs=+  Rm     :!rm -fv <args>
+
+# Shell aliases: }}
+
+augroup proper_file_type
+    autocmd!
+    autocmd BufNew,BufRead *.asm      setlocal filetype=asm
+    autocmd BufNew,BufRead fonts.conf setlocal filetype=xml
+    autocmd BufNew,BufRead TODO       setlocal filetype=text
+augroup END
+
+# au BufAdd,BufNewFile * ++nested {
+#     if &filetype != 'netrw'
+#         || &buftype != 'netrw'
+#         || &buftype != 'help'
+#         tab sball
+#     endif
+# }
+
+augroup proper_comments
+    autocmd!
+    autocmd FileType c &commentstring = "// %s"
+augroup END
