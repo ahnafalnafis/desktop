@@ -511,11 +511,6 @@ nnoremap j gj
 nnoremap gk k
 nnoremap gj j
 
-# nnoremap <A-;> :
-# vnoremap <A-;> :
-# snoremap <A-;> :
-# nnoremap <A-V> V
-
 # Key swaps: }}
 # Macros: {{
 
