@@ -331,13 +331,6 @@ vmap <A-C> <Plug>Commentary
 augroup setup_indentation
     autocmd!
     filetype plugin indent on
-    ## 2 Space:
-    # set tabstop=2
-    # set shiftwidth=2
-    # set shiftround
-    # set softtabstop=-1
-
-    ## 4 Space:
     set softtabstop=4
     set shiftwidth=4
     set shiftround
